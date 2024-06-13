@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>จ่ายเงินสำเร็จ</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js"></script>
+</head>
+<body>
+    <div>จ่ายเงินสำเร็จ</div>
+
+    <div>
+        <div>ชื่อ: <span id="name"></span></div>
+        <div>ที่อยู่: <span id="address"></span></div>
+    </div>
+
+    <script>
+      window.onload = async () => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const orderId = urlParams.get('id');
+    
+        try {
+          const response = await axios.get(`http://localhost:8000/order/${orderId}`);
+          const orderData = response.data;
+    
+          console.log('Order data:', orderData);  // เพิ่มการ log ข้อมูลการสั่งซื้อที่ได้มา
+    
+          // ตรวจสอบสถานะการสั่งซื้อ
+          if (orderData.status !== 'complete') {
+            window.location.href = 'http://localhost:8888/cancel.html';
+            return;  // หยุดการดำเนินการหากสถานะไม่ถูกต้อง
+          }
+    
+          // แสดงข้อมูลการสั่งซื้อ
+          document.getElementById('name').textContent = orderData.name;
+          document.getElementById('address').textContent = orderData.address;
+        } catch (error) {
+          console.error('Error fetching order data:', error);
+          window.location.href = 'http://localhost:8888/cancel.html';
+        }
+      };
+    </script>
+    
+</body>
+</html>

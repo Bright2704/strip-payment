@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout Page</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js"></script>
+    <script src="https://js.stripe.com/v3/"></script>
+</head>
+<body>
+    <div>
+        Checkout
+        <div>Name: <input type="text" id="name" name="name" /></div>
+        <div>Address:
+            <div>
+                <textarea id="address" name="address"></textarea>
+            </div>
+        </div>
+        <!-- Added id to button for easier selection -->
+        <button id="checkout">Checkout</button>
+    </div>
+
+    <script>
+        // Adding an event listener to the button
+        document.getElementById('checkout').addEventListener("click", async () => {
+            const name = document.getElementById('name').value;
+            const address = document.getElementById('address').value;
+
+            // Assuming you have product details on the page or stored somewhere
+            const product = {
+                name: "Test Product",  // Example product name
+                price: 10,             // Example price
+                quantity: 1            // Example quantity
+            };
+
+            // Construct the data object to send
+            const data = {
+                user: {
+                    name,
+                    address
+                },
+                product
+            };
+
+            try {
+                // Make the Axios POST request
+                const response = await axios.post('http://localhost:8000/api/checkout', data);
+                console.log('Checkout Response:', response.data);
+
+                // Redirect or handle response data here
+                alert('Checkout successful!');  // Simple alert; customize as needed
+            } catch (error) {
+                console.error('Checkout Error:', error.response.data);
+                alert('Checkout failed!');  // Simple alert; customize as needed
+            }
+        });
+    </script>
+</body>
+</html>
